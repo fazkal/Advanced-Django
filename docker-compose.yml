@@ -12,4 +12,5 @@ services:
     environment:
       - SECRET_KEY=test
       - DEBUG=True
+      - PIP_ROOT_USER_ACTION=ignore
 
