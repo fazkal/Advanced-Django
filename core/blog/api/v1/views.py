@@ -4,7 +4,7 @@ from .serializers import PostSerializer
 from ...models import Post
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-from rest_framework import mixins
+from rest_framework import mixins,viewsets
 from rest_framework.generics import GenericAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 
 """ function base api views: 
@@ -40,12 +40,20 @@ def postDetail(request,id):
         return Response({"Detail":"Item removed successfully"})"""
 
 """ Class base api views: """
+#inherited from ModelViewSet
+class PostModelViewSet(viewsets.ModelViewSet):
+    permission_classes=[IsAuthenticatedOrReadOnly]
+    serializer_class=PostSerializer
+    queryset=Post.objects.filter(status=True)
+
+
+'''inherited from GenericAPIView
 class PostList(ListCreateAPIView):
     """Getting a list of posts and creating new posts"""
     permission_classes=[IsAuthenticatedOrReadOnly]
     serializer_class=PostSerializer
     #When inherited from ListCreateAPIView and GenericAPIView with ListModel and CreateModel mixins:
-    queryset=Post.objects.filter(status=True)
+    queryset=Post.objects.filter(status=True)'''
 
 
 '''inherited from GenericAPIView with ListModel and CreateModel mixins
@@ -74,6 +82,7 @@ class PostDetail(RetrieveUpdateDestroyAPIView):
     """Getting detail of the post and and edit plus removing it"""
     permission_classes=[IsAuthenticatedOrReadOnly]
     serializer_class=PostSerializer
+    #When inherited from RetrieveUpdateDestroyAPIView:
     queryset=Post.objects.filter(status=True)
 
 '''Inherited from APIView
