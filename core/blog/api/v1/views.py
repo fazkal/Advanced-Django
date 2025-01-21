@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view,permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAuthenticated
 from rest_framework.response import Response
 from .serializers import PostSerializer
 from ...models import Post
@@ -40,6 +40,8 @@ def postDetail(request,id):
 """ Class base api views: """
 class PostList(APIView):
     """Getting a list of posts and creating new posts"""
+    permission_classes=[IsAuthenticatedOrReadOnly]
+    serializer_class=PostSerializer
 
     def get(self,request):
         """Retrieving a list of posts """
