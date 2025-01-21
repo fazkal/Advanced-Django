@@ -5,7 +5,7 @@ from ...models import Post
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework import mixins
-from rest_framework.generics import GenericAPIView,ListAPIView,ListCreateAPIView
+from rest_framework.generics import GenericAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 
 """ function base api views: 
 "Getting a list of posts and creating new posts:"
@@ -70,11 +70,13 @@ class PostList(ListCreateAPIView):
         serializer.save()
         return Response(serializer.data)'''
     
-class PostDetail(APIView):
+class PostDetail(RetrieveUpdateDestroyAPIView):
     """Getting detail of the post and and edit plus removing it"""
     permission_classes=[IsAuthenticatedOrReadOnly]
     serializer_class=PostSerializer
+    queryset=Post.objects.filter(status=True)
 
+'''Inherited from APIView
     def get(self,request,id):
         """Retrieving the post data """
         post=get_object_or_404(Post,pk=id,status=True)
@@ -93,4 +95,4 @@ class PostDetail(APIView):
         """Deleting the post object"""
         post=get_object_or_404(Post,pk=id,status=True)
         post.delete()
-        return Response({"Detail":"Item removed successfully"})
+        return Response({"Detail":"Item removed successfully"})'''
