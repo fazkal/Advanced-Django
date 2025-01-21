@@ -1,10 +1,12 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from .serializers import PostSerializer
 from ...models import Post
 from django.shortcuts import get_object_or_404
 
 @api_view(["GET","POST"])
+@permission_classes([IsAuthenticatedOrReadOnly])
 def postList(request):
     if request.method=="GET":
         posts=Post.objects.filter(status=True)
@@ -17,6 +19,7 @@ def postList(request):
         return Response(serializer.data)
 
 @api_view(["GET","PUT","DELETE"])
+@permission_classes([IsAuthenticatedOrReadOnly])
 def postDetail(request,id):
     post=get_object_or_404(Post,pk=id,status=True)
     if request.method=="GET":
