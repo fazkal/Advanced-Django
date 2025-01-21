@@ -1,7 +1,7 @@
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from .serializers import PostSerializer
-from ...models import Post
+from .serializers import PostSerializer,CategorySerializer
+from ...models import Post,Category
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework import mixins,viewsets
@@ -46,6 +46,10 @@ class PostModelViewSet(viewsets.ModelViewSet):
     serializer_class=PostSerializer
     queryset=Post.objects.filter(status=True)
 
+class CategoryModelViewSet(viewsets.ModelViewSet):
+    permission_classes=[IsAuthenticatedOrReadOnly]
+    serializer_class=CategorySerializer
+    queryset=Category.objects.all()
 
 '''inherited from GenericAPIView
 class PostList(ListCreateAPIView):
