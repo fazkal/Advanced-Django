@@ -9,6 +9,7 @@ from rest_framework.generics import GenericAPIView,ListAPIView,ListCreateAPIView
 from .permissions import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter,OrderingFilter
+from .paginations import DefaultPagination
 
 """ function base api views: 
 "Getting a list of posts and creating new posts:"
@@ -52,6 +53,7 @@ class PostModelViewSet(viewsets.ModelViewSet):
     filterset_fields=['category','author','status']
     search_fields=['title','content']
     ordering_fields=['published_date']
+    pagination_class=DefaultPagination
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes=[IsAuthenticatedOrReadOnly]
