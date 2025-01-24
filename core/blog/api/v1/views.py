@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework import mixins,viewsets
 from rest_framework.generics import GenericAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
+from .permissions import IsOwnerOrReadOnly
 
 """ function base api views: 
 "Getting a list of posts and creating new posts:"
@@ -42,7 +43,7 @@ def postDetail(request,id):
 """ Class base api views: """
 #inherited from ModelViewSet
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes=[IsAuthenticatedOrReadOnly]
+    permission_classes=[IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
     serializer_class=PostSerializer
     queryset=Post.objects.filter(status=True)
 
