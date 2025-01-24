@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework import mixins,viewsets
 from rest_framework.generics import GenericAPIView,ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from .permissions import IsOwnerOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
 
 """ function base api views: 
 "Getting a list of posts and creating new posts:"
@@ -46,6 +47,8 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes=[IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
     serializer_class=PostSerializer
     queryset=Post.objects.filter(status=True)
+    filter_backends=[DjangoFilterBackend]
+    filterset_fields=['category','author','status']
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes=[IsAuthenticatedOrReadOnly]
