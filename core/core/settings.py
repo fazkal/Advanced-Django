@@ -153,10 +153,21 @@ REST_FRAMEWORK={
     ]
 }
 
-# Email configuration
+# Email configuration for send email via smtp4dev (fake smtp server)
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS =False
 EMAIL_HOST ='smtp4dev'
 EMAIL_HOST_USER =''
 EMAIL_HOST_PASSWORD =''
 EMAIL_PORT =25
+
+# Email configuration for send email via gmail
+"""
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS =True
+EMAIL_HOST ='smtp.gmail.com'
+EMAIL_HOST_USER ='test4mydev@gmail.com'
+# This is App password, no account's password:
+EMAIL_HOST_PASSWORD ='App password'
+EMAIL_PORT =587
+"""
