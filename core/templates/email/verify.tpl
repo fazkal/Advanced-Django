@@ -1,8 +1,8 @@
 {% extends "mail_templated/base.tpl" %}
 {% block subject %}
-Hello {{name}}
+Account Activation and Verification
 {% endblock %}
 
 {% block html %}
-Your verify code is <strong>66636</strong>
+<strong>{{token}}</strong>
 {% endblock %}

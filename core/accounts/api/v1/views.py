@@ -13,9 +13,10 @@ from django.shortcuts import get_object_or_404
 # from django.core.mail import send_mail
 from mail_templated import send_mail,EmailMessage
 from .utils import EmailThreading
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
-User=get_user_model
+User=get_user_model()
 
 class RegistrationApiView(generics.GenericAPIView):
     serializer_class=RegistrationSerializer
@@ -97,8 +98,14 @@ class TestEmailSend(generics.GenericAPIView):
             ['to@example.com'],
             fail_silently=False,
         )'''
-
         # send_mail('email/verify.tpl',{'name': 'fazel'}, 'from@example.com',['to@example.com'])
-        email_obj=EmailMessage('email/verify.tpl',{'name': 'fazel'}, 'from@example.com',to=['to@example.com'])
+        self.email='fazelkalhory@gmail.com'
+        user_obj=get_object_or_404(User,email=self.email)
+        token=self.get_token_for_user(user_obj)
+        email_obj=EmailMessage('email/verify.tpl',{'token': token}, 'from@example.com',to=[self.email])
         EmailThreading(email_obj).start()
         return Response ("Email sent")
+    
+    def get_token_for_user(self,user):
+        refresh=RefreshToken.for_user(user)
+        return str(refresh.access_token)
