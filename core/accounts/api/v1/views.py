@@ -10,7 +10,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from ...models import Profile
 from django.shortcuts import get_object_or_404
-from django.core.mail import send_mail
+# from django.core.mail import send_mail
+from mail_templated import send_mail
+
 
 User=get_user_model
 
@@ -87,11 +89,12 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
 class TestEmailSend(generics.GenericAPIView):
 
     def get(self,request,*args,**kwargs):
-        send_mail(
+        '''send_mail(
             'Verification email',
             'Your verify code is: ...',
             'from@example.com',
             ['to@example.com'],
             fail_silently=False,
-        )
+        )'''
+        send_mail('email/verify.tpl',{'name': 'fazel'}, 'from@example.com',['to@example.com'])
         return Response ("Email sent")
