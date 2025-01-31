@@ -1,6 +1,6 @@
 from rest_framework import generics,status
 from rest_framework.response import Response
-from .serializers import (RegistrationSerializer,CustomAuthTokenSerializer,
+from .serializers import (RegistrationSerializer,CustomAuthTokenSerializer,ActivationResendSerializer,
                           ChangePasswordSerializer,ProfileSerializer)
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -14,10 +14,13 @@ from django.shortcuts import get_object_or_404
 from mail_templated import send_mail,EmailMessage
 from .utils import EmailThreading
 from rest_framework_simplejwt.tokens import RefreshToken
-
+import jwt
+from jwt.exceptions import ExpiredSignatureError,InvalidSignatureError
+from django.conf import settings
 
 User=get_user_model()
 
+# Define view for registration account
 class RegistrationApiView(generics.GenericAPIView):
     serializer_class=RegistrationSerializer
 
@@ -39,12 +42,46 @@ class RegistrationApiView(generics.GenericAPIView):
     def get_token_for_user(self,user):
         refresh=RefreshToken.for_user(user)
         return str(refresh.access_token)
-        
+
+# Define view for verify account    
 class ActivationApiView(APIView):
 
-    def post(self,request,*args,**kwargs):
-        return 'ok'
+    def get(self,request,token,*args,**kwargs):
+        try:
+            token=jwt.decode(token,settings.SECRET_KEY,algorithms=['HS256'])
+            user_id=token.get('user_id')
+        except ExpiredSignatureError:
+            return Response({"Details":"Token has been expired"},status=status.HTTP_400_BAD_REQUEST)
+        except InvalidSignatureError:
+            return Response({"Details":"Token is not valid"},status=status.HTTP_400_BAD_REQUEST)
+        user_obj=User.objects.get(pk=user_id)
 
+        if user_obj.is_verified:
+            return Response({"Details":"Your account has already been verified"})
+        user_obj.is_verified=True
+        user_obj.save()
+        return Response({"Details":"Your account have been verified and activated successfully"})
+
+
+# Define view for resend email of token activation account
+class ActivationResendApiView(generics.GenericAPIView):
+    serializer_class=ActivationResendSerializer
+    
+    def post(self,request,*args,**kwargs):
+        serializer=ActivationResendSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user_obj=serializer.validated_data['user']
+        token=self.get_token_for_user(user_obj)
+        email_obj=EmailMessage('email/verify.tpl',{'token': token}, 'from@example.com',to=[user_obj.email])
+        EmailThreading(email_obj).start()
+        return Response({"Details":"User activation resend successfully"},status=status.HTTP_200_OK)
+
+    def get_token_for_user(self,user):
+        refresh=RefreshToken.for_user(user)
+        return str(refresh.access_token)
+
+
+# Define view for generate token of account
 class CustomAuthToken(ObtainAuthToken):
     serializer_class=CustomAuthTokenSerializer
     def post(self, request, *args, **kwargs):
@@ -59,7 +96,7 @@ class CustomAuthToken(ObtainAuthToken):
             'email': user.email
         })
     
-    
+# Define view for discard token of account
 class CustomDiscardAuthToken(APIView):
     permission_classes=[IsAuthenticated]
 
@@ -67,7 +104,7 @@ class CustomDiscardAuthToken(APIView):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-'''Define view for change password'''
+# Define view for change password
 class ChangePasswordApiView(generics.UpdateAPIView):
     model=User
     permission_classes=[IsAuthenticated]
@@ -90,7 +127,7 @@ class ChangePasswordApiView(generics.UpdateAPIView):
             return Response({'details':'password changed successfully'},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
-'''Define view for show or edit Profile'''
+# Define view for show or edit Profile
 class ProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class=ProfileSerializer
     queryset=Profile.objects.all()
@@ -100,7 +137,7 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
         obj=get_object_or_404(queryset,user=self.request.user)
         return obj
     
-'''Define view for send mail for verification'''
+# Define view for send mail for test mail
 class TestEmailSend(generics.GenericAPIView):
 
     def get(self,request,*args,**kwargs):
