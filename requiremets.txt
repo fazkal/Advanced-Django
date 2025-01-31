@@ -1,6 +1,15 @@
+# General modules
 Django==4.2.14
 python-decouple
 pillow
 djangorestframework
+
+#Third party modules
 markdown
 django-filter
+drf-yasg[validation]
+
+#Deployment modules 
+
+#email third party modules
+django-mail-templated
