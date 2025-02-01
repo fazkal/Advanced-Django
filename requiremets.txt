@@ -13,3 +13,6 @@ drf-yasg[validation]
 
 #email third party modules
 django-mail-templated
+
+#Refactoring and test
+black
