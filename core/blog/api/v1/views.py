@@ -1,14 +1,15 @@
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.response import Response
+# from rest_framework.response import Response
 from .serializers import PostSerializer, CategorySerializer
 from ...models import Post, Category
-from django.shortcuts import get_object_or_404
-from rest_framework.views import APIView
-from rest_framework import mixins, viewsets
+# from django.shortcuts import get_object_or_404
+# from rest_framework.views import APIView
+from rest_framework import viewsets
+# from rest_framework import mixins
 from rest_framework.generics import (
-    GenericAPIView,
-    ListAPIView,
-    ListCreateAPIView,
+    # GenericAPIView,
+    # ListAPIView,
+    # ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
 from .permissions import IsOwnerOrReadOnly
@@ -74,7 +75,9 @@ class PostList(ListCreateAPIView):
     """Getting a list of posts and creating new posts"""
     permission_classes=[IsAuthenticatedOrReadOnly]
     serializer_class=PostSerializer
-    #When inherited from ListCreateAPIView and GenericAPIView with ListModel and CreateModel mixins:
+    #When inherited from 
+    # ListCreateAPIView and GenericAPIView 
+    # with ListModel and CreateModel mixins:
     queryset=Post.objects.filter(status=True)'''
 
 

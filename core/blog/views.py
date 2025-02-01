@@ -1,6 +1,12 @@
-from django.shortcuts import render, get_object_or_404
-from django.views.generic.base import TemplateView, RedirectView
-from django.views.generic import ListView, FormView, CreateView, UpdateView, DeleteView
+# from django.shortcuts import render, get_object_or_404
+from django.views.generic.base import TemplateView # ,RedirectView
+from django.views.generic import (
+    ListView,
+    # FormView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 from django.views.generic.detail import DetailView
 from .models import Post
 from .forms import PostForm
@@ -19,12 +25,12 @@ class IndexView(TemplateView):
         return context
 
 
-class RedirectToMaktab(RedirectView):
+'''class RedirectToMaktab(RedirectView):
     url = "https://maktabkhooneh.com"
 
     def get_redirect_url(self, *args, **kwargs):
         post = get_object_or_404(Post, pk=kwargs["pk"])
-        return super().get_redirect_url(*args, **kwargs)
+        return super().get_redirect_url(*args, **kwargs)'''
 
 
 class PostList(ListView):
@@ -38,10 +44,8 @@ class PostList(ListView):
     # posts=Post.objects.filter(status=True)
     # return posts
 
-
 class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
-
 
 """
 class PostCreateView(FormView):
@@ -53,7 +57,6 @@ class PostCreateView(FormView):
         form.save()
         return super().form_valid(form)
 """
-
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
