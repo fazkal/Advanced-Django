@@ -59,9 +59,7 @@ class ActivationApiView(APIView):
 
     def get(self, request, token, *args, **kwargs):
         try:
-            token = jwt.decode(
-                token, settings.SECRET_KEY, algorithms=["HS256"]
-            )
+            token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
             user_id = token.get("user_id")
         except ExpiredSignatureError:
             return Response(
@@ -76,15 +74,11 @@ class ActivationApiView(APIView):
         user_obj = User.objects.get(pk=user_id)
 
         if user_obj.is_verified:
-            return Response(
-                {"Details": "Your account has already been verified"}
-            )
+            return Response({"Details": "Your account has already been verified"})
         user_obj.is_verified = True
         user_obj.save()
         return Response(
-            {
-                "Details": "Your account have been verified and activated successfully"
-            }
+            {"Details": "Your account have been verified and activated successfully"}
         )
 
 
@@ -125,9 +119,7 @@ class CustomAuthToken(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
-        return Response(
-            {"token": token.key, "user_id": user.pk, "email": user.email}
-        )
+        return Response({"token": token.key, "user_id": user.pk, "email": user.email})
 
 
 # Define view for discard token of account
@@ -154,9 +146,7 @@ class ChangePasswordApiView(generics.UpdateAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             # check old password
-            if not self.object.check_password(
-                serializer.data.get("old_password")
-            ):
+            if not self.object.check_password(serializer.data.get("old_password")):
                 return Response(
                     {"old_password": ["wrong password."]},
                     status=status.HTTP_400_BAD_REQUEST,
