@@ -63,7 +63,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -183,7 +182,4 @@ EMAIL_PORT =587
 """
 
 
-CORS_ALLOWED_ORIGINS = [
-
-        'http://127.0.0.1:5500'
-]
+CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:5500"]
