@@ -11,6 +11,7 @@ urlpatterns = [
     # extra_context={"name":"fazel"})),
     path("cbv-index", views.IndexView.as_view(), name="cbv-index"),
     path("post/", views.PostList.as_view(), name="post-list"),
+    path("post/api/", views.PostListApiView.as_view(), name="post-list-api"),
     path("post/<int:pk>/", views.PostDetailView.as_view(), name="post-detail"),
     path("post/create/", views.PostCreateView.as_view(), name="post-create"),
     path("post/<int:pk>/edit", views.PostEditView.as_view(), name="post-edit"),
