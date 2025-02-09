@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "mail_templated",
     "corsheaders",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -183,3 +184,6 @@ EMAIL_PORT =587
 
 
 CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:5500"]
+
+# celery configs
+CELERY_BROKER_URL = 'redis://redis:6379/1'
