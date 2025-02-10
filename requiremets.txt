@@ -3,6 +3,7 @@ Django==4.2.14
 python-decouple
 pillow
 djangorestframework
+requests
 
 #Third party modules
 markdown
@@ -27,3 +28,4 @@ faker
 celery
 redis
 django-celery-beat
+django-redis
