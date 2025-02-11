@@ -13,6 +13,7 @@ djangorestframework-simplejwt
 django-cors-headers
 
 #Deployment modules 
+gunicorn
 
 #email third party modules
 django-mail-templated
